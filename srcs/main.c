@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:51:40 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/01/27 14:35:38 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/01/27 16:29:58 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,19 @@ int	ft_specialstrlen(char *str)
 	return (i);
 }
 
-void ft_memset(int *b, int c, int len)
+void	ft_memcpy(char *dst, char *src, int len)
+{
+	int			i;
+	
+	i = 0;
+	while (i < len)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+}
+
+void	ft_memset(int *b, int c, int len)
 {
 	int	i;
 
@@ -38,7 +50,7 @@ void ft_memset(int *b, int c, int len)
 	}
 }
 
-int ft_ischar(char *str, char c)
+int	ft_ischar(char *str, char c)
 {
 	int	i;
 	int	count;
@@ -58,7 +70,7 @@ int	ft_first(char *str)
 {
 	int	i;
 	int	len;
-	
+
 	len = ft_specialstrlen(str);
 	i = 0;
 	while (str[i])
@@ -73,7 +85,7 @@ int	ft_first(char *str)
 int	ft_last(char *str)
 {
 	int	i;
-	int len;
+	int	len;
 
 	i = 0;
 	while (str[i])
@@ -85,7 +97,7 @@ int	ft_last(char *str)
 		if (str[i] != '1')
 		{
 			if (i == len - 1 && str[i] == '\n')
-				break;
+				break ;
 			else
 				return (1);
 		}
@@ -94,10 +106,10 @@ int	ft_last(char *str)
 	return (0);
 }
 
-int ft_middle(char *str)
+int	ft_middle(char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	if (str[i] != '1')
 		return (1);
@@ -110,11 +122,12 @@ int ft_middle(char *str)
 
 int	ft_checkname(char *str)
 {
-	int	i;
-	int	j;
-	int	count;
-	char set[4] = ".ber";
+	int		i;
+	int		j;
+	int		count;
+	char	set[4];
 
+	ft_memcpy(set, ".ber", 4);
 	i = 0;
 	j = 0;
 	count = 0;
@@ -124,11 +137,9 @@ int	ft_checkname(char *str)
 		{
 			while (str[i] == set[j] && j < 4)
 			{
-				printf("le caractere similaire est : %c avec %c\n", str[i], set[j]);
 				i++;
 				j++;
 			}
-			printf("j : %d\n", j);
 			if (j == 4)
 				count++;
 			i = i - j;
@@ -136,13 +147,12 @@ int	ft_checkname(char *str)
 		}
 		i++;
 	}
-	printf("le programme a compte %d fois le .ber\n", count);
 	if (count != 1)
 		return (write(1, "Error\nInvalid map file name\n", 28), 1);
 	return (0);
 }
 
-int	ft_checkchar1(char *map_path, int line, int fd)
+int	ft_checkchar1(int line, int fd)
 {
 	char	*dest;
 	int 	i;
@@ -165,7 +175,7 @@ int	ft_checkchar1(char *map_path, int line, int fd)
 	return (0);
 }
 
-int	ft_checkchar2(char *map_path, int line, int fd)
+int	ft_checkchar2(int fd)
 {
 	char	*dest;    //C  P  E  
 	int		count[3];
@@ -197,12 +207,12 @@ int	ft_checkchar(char *map_path, int line)
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
 		return (write(1, "Error\nfailed to open map\n", 25), 1);
-	if (ft_checkchar1(map_path, line, fd))
+	if (ft_checkchar1(line, fd))
 	{
 		close (fd);
 		return (1);
 	}
-	if (ft_checkchar2(map_path, line, fd))
+	if (ft_checkchar2(fd))
 	{
 	 	close (fd);
 	 	return (1);
@@ -259,5 +269,5 @@ int	main(int argc, char **argv)
 {
 	if (argc != 2)
 		return (write(1, "Error\nInvalid arguments number\n", 31), 1);
-	printf("0 = le programme pense que c'est bon, 1 = il pense qu'il y a un probleme \n%d\n", ft_checkchar(argv[1], 6));
+	printf("le resultat : %d\n", ft_checkmap(argv[1]));
 }
