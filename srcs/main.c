@@ -6,268 +6,220 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:51:40 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/01/27 16:29:58 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/03 16:58:56 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/so_long.h"    // a changer en "so_long.h" quand le makefile est termine
 
-int	ft_specialstrlen(char *str)
+typedef struct	s_data {
+	void 	*mlx_ptr;
+	void	*mlx_win;
+	void	*img;
+	char	*addr;
+	char	**map;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	int		line_size;
+	int		column_size;
+}				t_data;
+
+int	ft_maplen(char **list)
 {
 	int	i;
 
 	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
+	while (list[i] != 0)
 		i++;
-	if (str[i - 1] == '\n')
-		i--;
 	return (i);
 }
 
-void	ft_memcpy(char *dst, char *src, int len)
-{
-	int			i;
-	
-	i = 0;
-	while (i < len)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-}
-
-void	ft_memset(int *b, int c, int len)
+int	ft_wherepx(char **map)
 {
 	int	i;
+	int j;
 
-	i = 0;
-	while (i < len)
+	j = 0;
+	while (map[j] != 0)
 	{
-		b[i] = (unsigned char)c;
-		i++;
-	}
-}
-
-int	ft_ischar(char *str, char c)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-int	ft_first(char *str)
-{
-	int	i;
-	int	len;
-
-	len = ft_specialstrlen(str);
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != '1' && i != len)
-			return (1);
-		i++;
+		i = 0;
+		while (map[j][i] != '\0')
+		{
+			if (map[j][i] == 'P')
+				return (i);
+			i++;
+		}
+		j++;
 	}
 	return (0);
 }
 
-int	ft_last(char *str)
+int	ft_wherepy(char **map)
 {
 	int	i;
-	int	len;
+	int j;
+
+	j = 0;
+	while (map[j] != 0)
+	{
+		i = 0;
+		while (map[j][i] != '\0')
+		{
+			if (map[j][i] == 'P')
+				return (j);
+			i++;
+		}
+		j++;
+	}
+	return (0);
+}
+
+void	ft_swap(char *a, char *b)
+{
+	char temp;
+	
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void	ft_switch(char **map, int j, int i, int wantj, int wanti)
+{
+	//ft_swap(&map[i][j], &map[wanti][wantj]);
+	char a;
+	
+	if (map[wantj][wanti] == '1')
+		return ;
+	a = map[j][i];
+	map[j][i] = map[wantj][wanti];
+	map[wantj][wanti] = a;	
+}
+
+void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
+
+void	square(t_data *data, char **map, int x, int y)
+{
+	int	i;
+	int	j;
 
 	i = 0;
-	while (str[i])
-		i++;
-	len = i;
-	i = 0;
-	while (str[i])
+	while (i < x)
 	{
-		if (str[i] != '1')
+		j = 0;
+		while (j < y)
 		{
-			if (i == len - 1 && str[i] == '\n')
-				break ;
-			else
-				return (1);
+			// ft_mlx_pixel_put(data, i, j, 0x00FFB7C5);
+			if (map[j / 100][i / 100] == '1')
+				ft_mlx_pixel_put(data, i, j, 0x00FF0000);
+			if (map[j / 100][i / 100] == '0')
+				ft_mlx_pixel_put(data, i, j, 0x0000FF00);
+			if (map[j / 100][i / 100] == 'C')
+				ft_mlx_pixel_put(data, i, j, 0x000000FF);
+			if (map[j / 100][i / 100] == 'E')
+				ft_mlx_pixel_put(data, i, j, 0x0000FFFF);
+			if (map[j / 100][i / 100] == 'P')
+				ft_mlx_pixel_put(data, i, j, 0x00FFB7C5);
+			j++;
 		}
 		i++;
 	}
-	return (0);
+	// (void)x;
+	// (void)y;
+	// (void)map;
+	// for (int i = 100; i < 400; i++) {
+	// 	for (int j = 100; j < 400; j++) {
+	// 		ft_mlx_pixel_put(data, i, j, 0x00FFB7C5);
+	// 	}
+	// }
 }
 
-int	ft_middle(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] != '1')
-		return (1);
-	while (str[i])
-		i++;
-	if (str[i - 2] != '1')
-		return (1);
-	return (0);
-}
-
-int	ft_checkname(char *str)
+int	ft_key(int key, void *param)
 {
 	int		i;
 	int		j;
-	int		count;
-	char	set[4];
+	// char	**dest;
 
-	ft_memcpy(set, ".ber", 4);
-	i = 0;
-	j = 0;
-	count = 0;
-	while (str[i])
+	t_data *data;
+	data = (t_data*)param;
+	i = ft_wherepx(data->map);
+	j = ft_wherepy(data->map);
+	if (key == 13)
 	{
-		if (str[i] == set[j])
-		{
-			while (str[i] == set[j] && j < 4)
-			{
-				i++;
-				j++;
-			}
-			if (j == 4)
-				count++;
-			i = i - j;
-			j = 0;
-		}
-		i++;
+		printf("EN HAUT\n");
+		ft_switch((char **)data->map, j, i, j - 1, i);
 	}
-	if (count != 1)
-		return (write(1, "Error\nInvalid map file name\n", 28), 1);
-	return (0);
-}
-
-int	ft_checkchar1(int line, int fd)
-{
-	char	*dest;
-	int 	i;
-
-	i = 1;
-	while (dest != NULL || i == 1)
+	else if (key == 2)
 	{
-		dest = get_next_line(fd);
-		if (dest == NULL)
-			break;
-		if (i == 1 && ft_first(dest) != 0)
-			return (free(dest), write(1, "Error\nInvalid map form.\n", 24), 1);
-		else if (i >= line && ft_last(dest) != 0)
-			return (free(dest), write(1, "Error\nInvalid map form.\n", 24), 1);
-		else if((i < line && i > 0) && (ft_middle(dest) != 0))
-			return (free(dest), write(1, "Error\nInvalid map form.\n", 24), 1);
-		free (dest);
-		i++;
+		printf("A DROITE (S/o marine)\n");
+		ft_switch(data->map, j, i, j, i + 1);
 	}
-	return (0);
-}
-
-int	ft_checkchar2(int fd)
-{
-	char	*dest;    //C  P  E  
-	int		count[3];
-	int		i;
-	
-	ft_memset(count, 0, 3);
-	i = 1;
-	while (dest != NULL || i == 1)
+	else if (key == 0)
 	{
-		dest = get_next_line(fd);
-		if (dest == NULL)
-			break;
-		count[0] = count[0] + ft_ischar(dest, 'C'); // inutile en realite
-		count[1] = count[1] + ft_ischar(dest, 'P');
-		count[2] = count[2] + ft_ischar(dest, 'E');
-		if (count[1] > 1 || count[2] > 1)
-			return (free(dest), write(1, "Error\nInvalid map form. 4\n", 26), 1);
-		free (dest);
-		i++;
+		printf("A GAUCHE (rpz meluch)\n");
+		ft_switch(data->map, j, i, j, i - 1);
 	}
-	return (0);
-}
-
-
-int	ft_checkchar(char *map_path, int line)
-{
-	int	fd;
-
-	fd = open(map_path, O_RDONLY);
-	if (fd == -1)
-		return (write(1, "Error\nfailed to open map\n", 25), 1);
-	if (ft_checkchar1(line, fd))
+	else if (key == 1)
 	{
-		close (fd);
-		return (1);
+		printf("EN BAAAAAS\n");
+		ft_switch(data->map, j, i, j + 1, i);
 	}
-	if (ft_checkchar2(fd))
-	{
-	 	close (fd);
-	 	return (1);
-	}
-	close (fd);
-	return (0);
-}
-
-int	ft_checkrectangle(char *map_path)
-{
-	int	fd;
-	int	map_lenght;
-	int	line;
-	char	*dest;
-	
-	map_lenght = -1;
-	line = 0;
-	fd = open(map_path, O_RDONLY);
-	if (fd == -1)
-		return (write(1, "Error\nfailed to open map\n", 25), 1);
-	while (dest != NULL)
-	{
-		dest = get_next_line(fd);
-		if (dest == NULL)
-			break;
-		if (map_lenght == -1)
-			map_lenght = ft_specialstrlen(dest);
-		if (map_lenght != ft_specialstrlen(dest))
-		{
-			close (fd);
-			return (free(dest), write(1, "Error\nInvalid map\n", 18), 0);
-		}
-		free(dest);
-		line++;
-	}
-	close (fd);
-	return (line);
-}
-
-int	ft_checkmap(char *map_path)
-{
-	int	line;
-	
-	if (ft_checkname(map_path))
-		return (1);
-	line = ft_checkrectangle(map_path);
-	if (line == 0)
-		return (1);
-	ft_checkchar(map_path, line);
-	return (0);
+	// printf("les coordonnes : j = %d, i = %d\n", j, i);
+	// i = 0;
+	mlx_destroy_image(data->mlx_ptr, data->img);
+	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 100, data->column_size * 100);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	square(data, data->map, data->line_size * 100, data->column_size * 100);
+	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
+	// dest = data->map;
+	// while (i < 6)
+	// {
+	// 	printf("%s\n", dest[i]);
+	// 	i++;
+	// }
+	return(0);
 }
 
 int	main(int argc, char **argv)
 {
+	// char	**map;
+	int		i;
+	// void 	*mlx_ptr;
+	// void	*mlx_win;
+	t_data	img;
+	// int		line_size;
+	// int		column_size;
+	
+	
+	i = 0;
 	if (argc != 2)
 		return (write(1, "Error\nInvalid arguments number\n", 31), 1);
-	printf("le resultat : %d\n", ft_checkmap(argv[1]));
+	if (ft_checkmap(argv[1]))
+		return (1);
+	img.map = ft_alloc_map(argv[1]);
+	img.line_size = ft_strlen(img.map[0]);
+	img.column_size = ft_maplen(img.map);
+	while (i < img.column_size)
+	{
+		printf("%s\n", img.map[i]);
+		i++;
+	}
+	printf("la taille d'une ligne = %d, et la taille d'une colone = %d\n", img.line_size, img.column_size);
+	img.mlx_ptr = mlx_init();
+	img.mlx_win = mlx_new_window(img.mlx_ptr, img.line_size * 100, img.column_size * 100, "so_long");
+	printf("la fenetre doit etre de taille de ligne %d pixels et colone %d pixel\n", img.line_size * 100, img.column_size * 100);
+	img.img = mlx_new_image(img.mlx_ptr, img.line_size * 100, img.column_size * 100);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
+	square(&img, img.map, img.line_size * 100, img.column_size * 100); 
+	//printf("line len : %d\n", img.endian);
+	// ft_mlx_pixel_put(&img, 1, 1, 0x00FF0000);
+	mlx_key_hook(img.mlx_win, ft_key, &img);
+	mlx_put_image_to_window(img.mlx_ptr, img.mlx_win, img.img, 0, 0);
+	mlx_loop(img.mlx_ptr);
 }
