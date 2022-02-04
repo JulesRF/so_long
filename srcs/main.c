@@ -6,23 +6,28 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:51:40 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/03 16:58:56 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/04 15:27:19 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/so_long.h"    // a changer en "so_long.h" quand le makefile est termine
 
+typedef	struct	s_sprite {
+	char	*right_path;
+}				t_sprite;
+
 typedef struct	s_data {
-	void 	*mlx_ptr;
-	void	*mlx_win;
-	void	*img;
-	char	*addr;
-	char	**map;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	int		line_size;
-	int		column_size;
+	void 		*mlx_ptr;
+	void		*mlx_win;
+	void		*img;
+	char		*addr;
+	char		**map;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			line_size;
+	int			column_size;
+	t_sprite	*knight_sprite;
 }				t_data;
 
 int	ft_maplen(char **list)
@@ -75,25 +80,18 @@ int	ft_wherepy(char **map)
 	return (0);
 }
 
-void	ft_swap(char *a, char *b)
-{
-	char temp;
-	
-	temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
 void	ft_switch(char **map, int j, int i, int wantj, int wanti)
 {
-	//ft_swap(&map[i][j], &map[wanti][wantj]);
-	char a;
-	
+	static int	count = 0;
+	char		a;
+
 	if (map[wantj][wanti] == '1')
 		return ;
 	a = map[j][i];
 	map[j][i] = map[wantj][wanti];
-	map[wantj][wanti] = a;	
+	map[wantj][wanti] = a;
+	count++;
+	printf("Nombre de pas : %d\n", count);
 }
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -115,7 +113,6 @@ void	square(t_data *data, char **map, int x, int y)
 		j = 0;
 		while (j < y)
 		{
-			// ft_mlx_pixel_put(data, i, j, 0x00FFB7C5);
 			if (map[j / 100][i / 100] == '1')
 				ft_mlx_pixel_put(data, i, j, 0x00FF0000);
 			if (map[j / 100][i / 100] == '0')
@@ -130,59 +127,32 @@ void	square(t_data *data, char **map, int x, int y)
 		}
 		i++;
 	}
-	// (void)x;
-	// (void)y;
-	// (void)map;
-	// for (int i = 100; i < 400; i++) {
-	// 	for (int j = 100; j < 400; j++) {
-	// 		ft_mlx_pixel_put(data, i, j, 0x00FFB7C5);
-	// 	}
-	// }
 }
 
 int	ft_key(int key, void *param)
 {
 	int		i;
 	int		j;
-	// char	**dest;
 
 	t_data *data;
 	data = (t_data*)param;
 	i = ft_wherepx(data->map);
 	j = ft_wherepy(data->map);
-	if (key == 13)
-	{
-		printf("EN HAUT\n");
+	if (key == 53)
+	 	exit(0);
+	else if (key == 13)
 		ft_switch((char **)data->map, j, i, j - 1, i);
-	}
 	else if (key == 2)
-	{
-		printf("A DROITE (S/o marine)\n");
 		ft_switch(data->map, j, i, j, i + 1);
-	}
 	else if (key == 0)
-	{
-		printf("A GAUCHE (rpz meluch)\n");
 		ft_switch(data->map, j, i, j, i - 1);
-	}
 	else if (key == 1)
-	{
-		printf("EN BAAAAAS\n");
 		ft_switch(data->map, j, i, j + 1, i);
-	}
-	// printf("les coordonnes : j = %d, i = %d\n", j, i);
-	// i = 0;
 	mlx_destroy_image(data->mlx_ptr, data->img);
 	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 100, data->column_size * 100);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	square(data, data->map, data->line_size * 100, data->column_size * 100);
 	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
-	// dest = data->map;
-	// while (i < 6)
-	// {
-	// 	printf("%s\n", dest[i]);
-	// 	i++;
-	// }
 	return(0);
 }
 
@@ -192,7 +162,8 @@ int	main(int argc, char **argv)
 	int		i;
 	// void 	*mlx_ptr;
 	// void	*mlx_win;
-	t_data	img;
+	t_data		img;
+	t_sprite	knight;
 	// int		line_size;
 	// int		column_size;
 	
@@ -205,6 +176,9 @@ int	main(int argc, char **argv)
 	img.map = ft_alloc_map(argv[1]);
 	img.line_size = ft_strlen(img.map[0]);
 	img.column_size = ft_maplen(img.map);
+	img.knight_sprite = &knight;
+	knight.right_path = "../textures/chevalier_droite.xpm";
+	printf("%s\n", img.knight_sprite->right_path);
 	while (i < img.column_size)
 	{
 		printf("%s\n", img.map[i]);
