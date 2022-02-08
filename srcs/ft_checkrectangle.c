@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 12:10:48 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/01/31 12:11:19 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/08 17:20:46 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	ft_checkrectangle(char *dest, int fd)
 		dest = get_next_line(fd);
 		if (dest == NULL)
 			break;
+		if (ft_specialstrlen(dest) < 3)
+			return(free(dest), printf("Error\nInvalid map"), 0);
 		if (map_lenght == -1)
 			map_lenght = ft_specialstrlen(dest);
 		if (map_lenght != ft_specialstrlen(dest))
@@ -85,5 +87,7 @@ int	ft_checkrectangle(char *dest, int fd)
 		free(dest);
 		line++;
 	}
+	if (line < 3)
+		return(printf("Error\nInvalid map\n"), 0);
 	return (line);
 }
