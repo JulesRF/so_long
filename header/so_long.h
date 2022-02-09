@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:33:20 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/01/31 13:11:00 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/09 19:47:11 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,39 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include "mlx.h"
+
+typedef struct	s_sprite {
+	char	*path;
+	void	*img;
+	int		*data;
+	int		img_width;
+	int		img_heigth;
+	int		bpp;
+	int		line_length;
+	int		endian;
+}				t_sprite;
+
+typedef struct	s_data {
+	void 		*mlx_ptr;
+	void		*mlx_win;
+	void		*img;
+	char		*addr;
+	char		**map;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			line_size;
+	int			column_size;
+	int			coin_num;
+	int			player_x;
+	int			player_y;
+	t_sprite	*knight_sprite;
+	t_sprite	*coin_sprite;
+	t_sprite	*wall_sprite;
+	t_sprite	*floor_sprite;
+	t_sprite	*exit_sprite;
+	t_sprite	*enemy_sprite;
+}				t_data;
 
 //get_next_line.c et get_next_line_utils.c
 char	*get_next_line(int fd);
