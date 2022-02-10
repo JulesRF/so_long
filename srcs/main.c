@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:51:40 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/09 23:08:12 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:37:28 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,8 @@ void	ft_init_sprite2(t_data *data, t_sprite *sprite)
 	sprite->img = mlx_xpm_file_to_image(data->mlx_ptr,
 				sprite->path, &sprite->img_width,
 				&sprite->img_heigth);
+	if (!sprite->img)
+		exit(1);
 	sprite->data = (int *)mlx_get_data_addr(sprite->img,
 				&sprite->bpp, &sprite->line_length,
 				&sprite->endian);
@@ -242,16 +244,19 @@ void	ft_init_sprite2(t_data *data, t_sprite *sprite)
 void	ft_init_sprite(t_data *data)
 {	
 	data->knight_sprite = malloc(sizeof(t_sprite));
-	data->knight_sprite->path = "./textures/player.xpm";
 	data->coin_sprite = malloc(sizeof(t_sprite));
-	data->coin_sprite->path = "./textures/gemme2.xpm";
 	data->floor_sprite = malloc(sizeof(t_sprite));
-	data->floor_sprite->path = "./textures/floor2.xpm";
 	data->wall_sprite = malloc(sizeof(t_sprite));
-	data->wall_sprite->path = "./textures/wall.xpm";
 	data->exit_sprite = malloc(sizeof(t_sprite));
-	data->exit_sprite->path = "./textures/exit.xpm";
 	data->enemy_sprite = malloc(sizeof(t_sprite));
+	if (!data->knight_sprite || !data->coin_sprite || !data->floor_sprite
+		|| !data->wall_sprite || !data->exit_sprite || !data->enemy_sprite)
+		exit(1);
+	data->knight_sprite->path = "./textures/player.xpm";
+	data->coin_sprite->path = "./textures/gemme2.xpm";
+	data->floor_sprite->path = "./textures/floor2.xpm";
+	data->wall_sprite->path = "./textures/wall.xpm";
+	data->exit_sprite->path = "./textures/exit.xpm";
 	data->enemy_sprite->path = "./textures/chevalier_droite.xpm";
 	ft_init_sprite2(data, data->knight_sprite);
 	ft_init_sprite2(data, data->coin_sprite);
@@ -280,21 +285,21 @@ void	ft_init_mstruct(t_data *data, char *arg)
 	data->coin_num = ft_count_coin(data->map, data->line_size, data->column_size);
 }
 
-int	ft_time(t_data *data)
-{
-	clock_t						time;
-	static unsigned long int	secondes = 0;
+// int	ft_time(t_data *data)
+// {
+// 	clock_t						time;
+// 	static unsigned long int	secondes = 0;
 	
-	(void)data;
-	time = clock();
-	if (time / CLOCKS_PER_SEC != secondes)
-	{
-		secondes = time / CLOCKS_PER_SEC;
-		ft_switch()
-		printf("%lu\n", secondes);
-	}
-	return (0);
-}
+// 	(void)data;
+// 	time = clock();
+// 	if (time / CLOCKS_PER_SEC != secondes)
+// 	{
+// 		secondes = time / CLOCKS_PER_SEC;
+// 		ft_switch()
+// 		printf("%lu\n", secondes);
+// 	}
+// 	return (0);
+// }
 
 int	main(int argc, char **argv)
 {
@@ -307,6 +312,8 @@ int	main(int argc, char **argv)
 	if (ft_checkmap(argv[1]))
 		return (1);
 	img = malloc(sizeof(t_data));
+	if (!img)
+		return (1);
 	ft_init_mstruct(img, argv[1]);
 	printf("Il y a %d gemmes sur la map\n", img->coin_num);
 	while (i < img->column_size)
@@ -319,7 +326,7 @@ int	main(int argc, char **argv)
 	square(img, img->map, img->line_size * 100, img->column_size * 100);
 	mlx_hook(img->mlx_win, 17, 0, ft_close, img);
 	mlx_key_hook(img->mlx_win, ft_key, img);
-	mlx_loop_hook(img->mlx_ptr, ft_time, img);
+	// mlx_loop_hook(img->mlx_ptr, ft_time, img);
 	mlx_put_image_to_window(img->mlx_ptr, img->mlx_win, img->img, 0, 0);
 	mlx_loop(img->mlx_ptr);
 }
