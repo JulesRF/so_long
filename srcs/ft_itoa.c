@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:29:10 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 19:38:37 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:15:45 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ char	*ft_strjoin2(char *s1, char *s2)
 	while (s2[j])
 		dest[i++] = s2[j++];
 	dest[i] = '\0';
+	free (s2);
 	return (dest);
 }

@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 20:07:47 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 20:09:49 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:28:46 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,36 @@ int	ft_close(int input, void *param)
 	(void)input;
 	data = (t_data *)param;
 	ft_exit(data);
+	return (0);
+}
+
+int	ft_key(int key, void *param)
+{
+	t_data	*data;
+
+	data = (t_data *)param;
+	data->player_x = ft_wherepx(data->map, 'P');
+	data->player_y = ft_wherepy(data->map, 'P');
+	printf("%d\n", key);
+	if (key == 65307)
+		ft_exit(data);
+	else if (key == 13)
+		ft_switch(data, data->player_y - 1, data->player_x);
+	else if (key == 2)
+		ft_switch(data, data->player_y, data->player_x + 1);
+	else if (key == 0)
+		ft_switch(data, data->player_y, data->player_x - 1);
+	else if (key == 1)
+		ft_switch(data, data->player_y + 1, data->player_x);
+	mlx_destroy_image(data->mlx_ptr, data->img);
+	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 100,
+			data->column_size * 100);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
+			&data->line_length, &data->endian);
+	ft_square(data, data->map, data->line_size * 100, data->column_size * 100);
+	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
+	free (data->text);
+	data->text = ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count));
+	mlx_string_put(data->mlx_ptr, data->mlx_win, 20, 20, 0, data->text);
 	return (0);
 }

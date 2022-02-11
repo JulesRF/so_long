@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:52:56 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 19:53:53 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:11:59 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ void	ft_enemy_move(t_data *data)
 			&data->line_length, &data->endian);
 	ft_square(data, data->map, data->line_size * 100, data->column_size * 100);
 	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
-	mlx_string_put(data->mlx_ptr, data->mlx_win, 20, 20, 0, ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count)));
+	free (data->text);
+	data->text = ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count));
+	mlx_string_put(data->mlx_ptr, data->mlx_win, 20, 20, 0, data->text);
 }
 
 int	ft_time(t_data *data)

@@ -6,39 +6,11 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:51:40 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 20:07:38 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:19:37 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/so_long.h"    // a changer en "so_long.h" quand le makefile est termine
-
-int	ft_key(int key, void *param)
-{
-	t_data	*data;
-
-	data = (t_data *)param;
-	data->player_x = ft_wherepx(data->map, 'P');
-	data->player_y = ft_wherepy(data->map, 'P');
-	if (key == 53)
-		ft_exit(data);
-	else if (key == 13)
-		ft_switch(data, data->player_y - 1, data->player_x);
-	else if (key == 2)
-		ft_switch(data, data->player_y, data->player_x + 1);
-	else if (key == 0)
-		ft_switch(data, data->player_y, data->player_x - 1);
-	else if (key == 1)
-		ft_switch(data, data->player_y + 1, data->player_x);
-	mlx_destroy_image(data->mlx_ptr, data->img);
-	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 100,
-			data->column_size * 100);
-	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
-			&data->line_length, &data->endian);
-	ft_square(data, data->map, data->line_size * 100, data->column_size * 100);
-	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
-	mlx_string_put(data->mlx_ptr, data->mlx_win, 20, 20, 0, ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count)));
-	return (0);
-}
 
 void	ft_init_sprite2(t_data *data, t_sprite *sprite)
 {
@@ -104,4 +76,29 @@ void	ft_init_mstruct(t_data *data, char *arg)
 	data->line_size = ft_strlen(data->map[0]);
 	data->column_size = ft_maplen(data->map);
 	data->coin_num = ft_count_coin(data->map, data->line_size, data->column_size);
+	data->text = ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count));
+}
+
+int	main(int argc, char **argv)
+{
+	t_data	*img;
+
+	if (argc != 2)
+		return (printf("Error\nInvalid arguments number\n"), 1);
+	if (ft_checkmap(argv[1]))
+		return (1);
+	img = malloc(sizeof(t_data));
+	if (!img)
+		return (1);
+	ft_init_mstruct(img, argv[1]);
+	ft_init_mlxwinimg(img);
+	ft_init_sprite(img);
+	ft_square(img, img->map, img->line_size * 100, img->column_size * 100);
+	mlx_hook(img->mlx_win, 17, 0, ft_close, img);
+	mlx_key_hook(img->mlx_win, ft_key, img);
+	if (img->enemy_sprite)
+		mlx_loop_hook(img->mlx_ptr, ft_time, img);
+	mlx_put_image_to_window(img->mlx_ptr, img->mlx_win, img->img, 0, 0);
+	mlx_string_put(img->mlx_ptr, img->mlx_win, 20, 20, 0, img->text);
+	mlx_loop(img->mlx_ptr);
 }
