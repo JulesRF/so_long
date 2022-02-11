@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:33:20 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/09 19:47:11 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/10 20:08:52 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+#include <time.h>
 # include "mlx.h"
 
 typedef struct	s_sprite {
@@ -34,6 +35,7 @@ typedef struct	s_data {
 	void		*mlx_win;
 	void		*img;
 	char		*addr;
+	char		*text;
 	char		**map;
 	int			bits_per_pixel;
 	int			line_length;
@@ -43,12 +45,17 @@ typedef struct	s_data {
 	int			coin_num;
 	int			player_x;
 	int			player_y;
+	int			step_count;
+	int			enemy_dir;
+	int			enemy_switch;
+	clock_t		ms;
 	t_sprite	*knight_sprite;
 	t_sprite	*coin_sprite;
 	t_sprite	*wall_sprite;
 	t_sprite	*floor_sprite;
 	t_sprite	*exit_sprite;
 	t_sprite	*enemy_sprite;
+	t_sprite	*enemy2_sprite;
 }				t_data;
 
 //get_next_line.c et get_next_line_utils.c
@@ -81,5 +88,31 @@ int		ft_checkchar2(char *dest, int fd);
 int		ft_checkname(char *str, char *set);
 int		ft_checkchar(char *dest, int line, int fd);
 int		ft_checkmap(char *map_path);
+
+//ft_itoa.c
+char	*ft_itoa(int n);
+char	*ft_strjoin2(char *s1, char *s2);
+
+//ft_enemy_move.c
+int		ft_time(t_data *data);
+void	ft_enemy_move(t_data *data);
+void	ft_switch_enemy(t_data *data, int enemy_x, int enemy_y);
+
+//ft_square.c
+void	ft_square(t_data *data, char **map, int x, int y);
+void	ft_draw_sprite(t_data *data, int x, int y, t_sprite *sprite);
+int		ft_tkpixel(t_data *data, t_sprite *sprite, double ratiox, double ratioy);
+void	ft_mlx_pixel_put(t_data *data, int x, int y, int color);
+
+//ft_utils.c
+int		ft_maplen(char **list);
+int		ft_wherepx(char **map, char p);
+int		ft_wherepy(char **map, char p);
+int		ft_count_coin(char **map, int line, int column);
+
+//ft_switch.c
+int		ft_close(int input, void *param);
+void	ft_switch(t_data *data, int wantj, int wanti);
+void	ft_exit(t_data *data);
 
 #endif
