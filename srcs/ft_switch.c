@@ -66,7 +66,7 @@ int	ft_key(int key, void *param)
 	data->player_x = ft_wherepx(data->map, 'P');
 	data->player_y = ft_wherepy(data->map, 'P');
 	printf("%d\n", key);
-	if (key == 65307)
+	if (key == LA VALEUR DE ECHAP)
 		ft_exit(data);
 	else if (key == 13)
 		ft_switch(data, data->player_y - 1, data->player_x);
