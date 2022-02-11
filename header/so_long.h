@@ -114,5 +114,13 @@ int		ft_count_coin(char **map, int line, int column);
 int		ft_close(int input, void *param);
 void	ft_switch(t_data *data, int wantj, int wanti);
 void	ft_exit(t_data *data);
+int		ft_key(int key, void *param);
+
+//main.c
+int		main(int argc, char **argv);
+void	ft_init_mstruct(t_data *data, char *arg);
+void	ft_init_mlxwinimg(t_data *data);
+void	ft_init_sprite(t_data *data);
+void	ft_init_sprite2(t_data *data, t_sprite *sprite);
 
 #endif
