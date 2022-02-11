@@ -14,23 +14,7 @@
 
 void	ft_exit(t_data *data)
 {
-	// int	i;
-	(void)data;
-	// i = 0;
-	// free(data->knight_sprite);
-	// free(data->coin_sprite);
-	// free(data->wall_sprite);
-	// free(data->exit_sprite);
-	// free(data->floor_sprite);
-	// free(data->enemy_sprite);
-	// while (data->map[i] != 0)
-	// {
-	// 	free(data->map[i]);
-	// 	i++;
-	// }
-	// free(data);
-	// while (1)
-	// 	;
+	free(data->text);
 	exit(0);
 }
 
