@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 16:58:24 by jroux-fo          #+#    #+#              #
-#    Updated: 2022/02/10 20:10:36 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/02/14 15:30:26 by jroux-fo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME = so_long
 
 SRCS_FILES	=	main.c 					\
 				ft_itoa.c				\
+				ft_init.c				\
 				ft_utils.c				\
 				ft_switch.c				\
 				ft_square.c				\
@@ -25,7 +26,7 @@ SRCS_FILES	=	main.c 					\
 				ft_checkrectangle.c		\
 				get_next_line_utils.c	\
 
-FLAGS = -Wall -Werror -Wextra# -g3 -fsanitize=address
+FLAGS = -Wall -Werror -Wextra
 
 INCLUDES = header
 
@@ -43,7 +44,7 @@ $(OBJ_DIR)/%.o: $(PATH)/%.c
 	@gcc $(FLAGS) -I $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@gcc $(OBJ) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	@gcc $(OBJ) -Lminilibx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 	@printf "Executable $@ created !\n"
 
 clean:
@@ -53,6 +54,8 @@ clean:
 fclean: clean
 	@printf "Deleting executable\n"
 	@rm -rf $(NAME)
+
+bonus: $(NAME)
 
 re: fclean all
 

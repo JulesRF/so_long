@@ -6,11 +6,11 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:56:33 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 19:57:24 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 15:42:44 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/so_long.h"    // a changer en "so_long.h" quand le makefile est termine
+#include "../header/so_long.h"
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -20,20 +20,20 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	ft_tkpixel(t_data *data, t_sprite *sprite, double ratiox, double ratioy)
+int	ft_tkpixel(t_data *data, t_sprite *sprite, double rx, double ry)
 {
 	int		res;
 	double	coefx;
 	double	coefy;
 
-	coefx = sprite->img_width * ratiox;
-	coefy = sprite->img_heigth * ratioy;
+	coefx = sprite->img_width * rx;
+	coefy = sprite->img_heigth * ry;
 	res = sprite->data[(int)(coefx + sprite->img_width * (int)(coefy))];
 	if (res == -16777216)
 	{
 		res = data->floor_sprite->data[(int)(data->floor_sprite->img_width
-				* ratiox + data->floor_sprite->img_width
-				* (int)(data->floor_sprite->img_heigth * ratioy))];
+				* rx + data->floor_sprite->img_width
+				* (int)(data->floor_sprite->img_heigth * ry))];
 	}
 	return (res);
 }
@@ -55,6 +55,14 @@ void	ft_draw_sprite(t_data *data, int x, int y, t_sprite *sprite)
 		}
 		i++;
 	}
+}
+
+void	ft_draw_enemy(t_data *data, int i, int j)
+{
+	if (data->enemy_switch == 1)
+		ft_draw_sprite(data, i, j, data->enemy_sprite);
+	else if (data->enemy_switch == 2)
+		ft_draw_sprite(data, i, j, data->enemy2_sprite);
 }
 
 void	ft_square(t_data *data, char **map, int x, int y)
@@ -79,18 +87,7 @@ void	ft_square(t_data *data, char **map, int x, int y)
 			if (map[j / 100][i / 100] == 'P')
 				ft_draw_sprite(data, i, j, data->knight_sprite);
 			if (map[j / 100][i / 100] == 'X')
-			{
-				if (data->enemy_switch == 1)
-				{
-					ft_draw_sprite(data, i, j, data->enemy_sprite);
-					data->enemy_switch = 2;
-				}
-				else if (data->enemy_switch == 2)
-				{
-					ft_draw_sprite(data, i, j, data->enemy2_sprite);
-					data->enemy_switch = 1;
-				}
-			}
+				ft_draw_enemy(data, i, j);
 			j += 100;
 		}
 		i += 100;

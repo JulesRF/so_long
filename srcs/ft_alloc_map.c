@@ -6,11 +6,11 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 12:12:01 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/09 15:16:23 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 12:20:38 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/so_long.h"    // a changer
+#include "../header/so_long.h"
 
 char	**ft_init(int line)
 {

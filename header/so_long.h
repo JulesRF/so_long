@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 16:33:20 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 20:08:52 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 15:43:02 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-#include <time.h>
+# include <time.h>
 # include "mlx.h"
 
-typedef struct	s_sprite {
+typedef struct s_sprite {
 	char	*path;
 	void	*img;
 	int		*data;
@@ -30,8 +30,8 @@ typedef struct	s_sprite {
 	int		endian;
 }				t_sprite;
 
-typedef struct	s_data {
-	void 		*mlx_ptr;
+typedef struct s_data {
+	void		*mlx_ptr;
 	void		*mlx_win;
 	void		*img;
 	char		*addr;
@@ -86,7 +86,8 @@ int		ft_checkchar2(char *dest, int fd);
 
 //ft_checkmap.c
 int		ft_checkname(char *str, char *set);
-int		ft_checkchar(char *dest, int line, int fd);
+int		ft_test(char *str, char *set, int count, int i);
+int		ft_checkchar(char *map_path, char *dest, int line, int fd);
 int		ft_checkmap(char *map_path);
 
 //ft_itoa.c
@@ -100,8 +101,9 @@ void	ft_switch_enemy(t_data *data, int enemy_x, int enemy_y);
 
 //ft_square.c
 void	ft_square(t_data *data, char **map, int x, int y);
+void	ft_draw_enemy(t_data *data, int i, int j);
 void	ft_draw_sprite(t_data *data, int x, int y, t_sprite *sprite);
-int		ft_tkpixel(t_data *data, t_sprite *sprite, double ratiox, double ratioy);
+int		ft_tkpixel(t_data *data, t_sprite *sprite, double rx, double ry);
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //ft_utils.c
@@ -112,15 +114,19 @@ int		ft_count_coin(char **map, int line, int column);
 
 //ft_switch.c
 int		ft_close(int input, void *param);
+void	ft_text(t_data *data);
 void	ft_switch(t_data *data, int wantj, int wanti);
 void	ft_exit(t_data *data);
 int		ft_key(int key, void *param);
 
-//main.c
-int		main(int argc, char **argv);
+//ft_init.c
 void	ft_init_mstruct(t_data *data, char *arg);
 void	ft_init_mlxwinimg(t_data *data);
 void	ft_init_sprite(t_data *data);
 void	ft_init_sprite2(t_data *data, t_sprite *sprite);
+void	ft_init_enemy(t_data *data);
+
+//main.c
+int		main(int argc, char **argv);
 
 #endif

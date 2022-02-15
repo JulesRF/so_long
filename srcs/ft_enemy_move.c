@@ -6,16 +6,16 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:52:56 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/11 16:11:59 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 15:39:55 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/so_long.h"    // a changer
+#include "../header/so_long.h"
 
 void	ft_switch_enemy(t_data *data, int enemy_x, int enemy_y)
 {
-	char c;
-	
+	char	c;
+
 	if (data->map[enemy_y][enemy_x + data->enemy_dir] == 'P')
 	{
 		printf("Oh non, vous êtes repéré !\n");
@@ -23,13 +23,15 @@ void	ft_switch_enemy(t_data *data, int enemy_x, int enemy_y)
 	}
 	if (data->map[enemy_y][enemy_x + data->enemy_dir] != '0')
 	{
-		data->enemy_dir = -1;
-		ft_switch_enemy(data, enemy_x, enemy_y);
+		if (data->enemy_dir == 1)
+			data->enemy_dir = -1;
+		else
+			data->enemy_dir = 1;
 		return ;
 	}
 	c = data->map[enemy_y][enemy_x];
 	data->map[enemy_y][enemy_x] = data->map[enemy_y][enemy_x + data->enemy_dir];
-		data->map[enemy_y][enemy_x + data->enemy_dir] = c;
+	data->map[enemy_y][enemy_x + data->enemy_dir] = c;
 }
 
 void	ft_enemy_move(t_data *data)
@@ -47,20 +49,23 @@ void	ft_enemy_move(t_data *data)
 			&data->line_length, &data->endian);
 	ft_square(data, data->map, data->line_size * 100, data->column_size * 100);
 	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
-	free (data->text);
-	data->text = ft_strjoin2("nombre de pas : ", ft_itoa(data->step_count));
+	ft_text(data);
 	mlx_string_put(data->mlx_ptr, data->mlx_win, 20, 20, 0, data->text);
 }
 
 int	ft_time(t_data *data)
 {
-	clock_t			time;
-	int				res;
-	
+	clock_t	time;
+	int		res;
+
 	time = clock();
 	res = (time - data->ms) * 1000 / CLOCKS_PER_SEC;
 	if (res >= 400)
 	{
+		if (data->enemy_switch == 1)
+			data->enemy_switch = 2;
+		else
+			data->enemy_switch = 1;
 		data->ms = clock();
 		ft_enemy_move(data);
 	}

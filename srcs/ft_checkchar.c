@@ -6,11 +6,11 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 12:04:54 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/10 20:14:27 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 12:14:34 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/so_long.h"    // a changer en "so_long.h" quand le makefile est termine
+#include "../header/so_long.h"
 
 int	ft_first(char *str)
 {
@@ -90,23 +90,23 @@ int	ft_checkchar1(char *dest, int line, int fd)
 
 int	ft_checkchar2(char *dest, int fd)
 {
-	int	count[3];  //C  P  E
+	int	count[3];
 	int	i;
-	
+
 	ft_memset(count, 0, 3);
 	i = 1;
 	while (dest != NULL || i == 1)
 	{
 		dest = get_next_line(fd);
-		if (dest == NULL)
-			break;
-		count[0] = count[0] + ft_ischar(dest, 'C'); // inutile en realite
+		if (dest == NULL && i > 1)
+			break ;
+		count[0] = count[0] + ft_ischar(dest, 'C');
 		count[1] = count[1] + ft_ischar(dest, 'P');
 		count[2] = count[2] + ft_ischar(dest, 'E');
-		if (count[1] > 1 || count[2] > 1)
-			return (free(dest), write(1, "Error\nInvalid map form. 4\n", 26), 1);
 		free (dest);
 		i++;
 	}
+	if (count[0] == 0 || count[1] != 1 || count[2] != 1)
+		return (write(1, "Error\nInvalid map form. 4\n", 26), 1);
 	return (0);
 }

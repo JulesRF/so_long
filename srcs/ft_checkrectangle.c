@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 12:10:48 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/08 17:20:46 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 12:17:36 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_memset(int *b, int c, int len)
 	i = 0;
 	while (i < len)
 	{
-		b[i] = (unsigned char)c;
+		b[i] = c;
 		i++;
 	}
 }
@@ -55,6 +55,8 @@ int	ft_ischar(char *str, char c)
 	int	i;
 	int	count;
 
+	if (!str)
+		return (0);
 	i = 0;
 	count = 0;
 	while (str[i])
@@ -70,24 +72,24 @@ int	ft_checkrectangle(char *dest, int fd)
 {
 	int		map_lenght;
 	int		line;
-	
+
 	map_lenght = -1;
-	line = 0; 
+	line = 0;
 	while (dest != NULL || line == 0)
 	{
 		dest = get_next_line(fd);
 		if (dest == NULL)
-			break;
+			break ;
 		if (ft_specialstrlen(dest) < 3)
-			return(free(dest), printf("Error\nInvalid map"), 0);
+			return (free (dest), printf("Error\nInvalid map"), 0);
 		if (map_lenght == -1)
 			map_lenght = ft_specialstrlen(dest);
 		if (map_lenght != ft_specialstrlen(dest))
-			return (free(dest), write(1, "Error\nInvalid map\n", 18), 0);
+			return (free (dest), write(1, "Error\nInvalid map\n", 18), 0);
 		free(dest);
 		line++;
 	}
 	if (line < 3)
-		return(printf("Error\nInvalid map\n"), 0);
+		return (printf("Error\nInvalid map\n"), 0);
 	return (line);
 }

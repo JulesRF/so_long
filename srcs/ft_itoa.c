@@ -6,11 +6,11 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 19:29:10 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/02/11 16:15:45 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/02/14 12:20:59 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/so_long.h"    // a changer
+#include "../header/so_long.h"
 
 static int	ft_count(int n)
 {
